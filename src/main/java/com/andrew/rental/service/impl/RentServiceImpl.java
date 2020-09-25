@@ -26,7 +26,6 @@ public class RentServiceImpl implements RentService {
     private PaymentService paymentService;
 
 
-    private final int cancellationPenalty = 3;
     private final double tax = 0.3;
 
     @Override
