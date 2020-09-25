@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -28,7 +29,7 @@ public class User {
     @Column(name = "password_hash")
     private String passwordHash;
 
-    @Column(name = "created_at")
+    @CreationTimestamp
     @GeneratedValue
     private LocalDateTime createdAt;
 
