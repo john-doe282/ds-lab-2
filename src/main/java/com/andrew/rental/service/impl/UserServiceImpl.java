@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
         List<BankAccount> bankAccounts = userOptional.get().getBankAccounts();
         if (bankAccounts.isEmpty()) {
-            throw new IllegalAccessException("User has not specified a bank account");
+            throw new NotFoundException("User has not specified a bank account");
         }
         return bankAccounts.get(0);
 
