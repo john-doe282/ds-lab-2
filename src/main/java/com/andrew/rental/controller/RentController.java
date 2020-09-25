@@ -17,14 +17,19 @@ public class RentController {
     @Autowired
     private RentService rentService;
 
-    @GetMapping("user/{id}")
-    List<ActiveRent> getActiveRentsForUser(@PathVariable UUID userId) throws NotFoundException {
+    @GetMapping("/user/{id}")
+    List<ActiveRent> getActiveRentsForUser(@PathVariable(name = "id") UUID userId) throws NotFoundException {
         return rentService.activeRentsForUserId(userId);
     }
 
     @PostMapping
     void rent(@Validated @RequestBody ActiveRent rent) throws IllegalAccessException, NotFoundException {
         rentService.rent(rent);
+    }
+
+    @GetMapping("{id}")
+    ActiveRent getActiveRent(@PathVariable("id") UUID id) throws NotFoundException {
+        return rentService.getActiveRentById(id);
     }
 
     @DeleteMapping("{id}")

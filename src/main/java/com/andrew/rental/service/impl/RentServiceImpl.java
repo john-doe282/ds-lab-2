@@ -61,6 +61,16 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
+    public ActiveRent getActiveRentById(UUID id) throws NotFoundException {
+        Optional<ActiveRent> rentOptional = activeRentRepository.findById(id);
+        if (!rentOptional.isPresent()) {
+            throw new NotFoundException("Rent does not exist");
+        }
+
+        return rentOptional.get();
+    }
+
+    @Override
     public void closeRentById(UUID id) throws NotFoundException {
         Optional<ActiveRent> activeRentOptional = activeRentRepository.findById(id);
         if (!activeRentOptional.isPresent()) {

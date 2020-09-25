@@ -1,13 +1,11 @@
 package com.andrew.rental.controller;
 
-import com.andrew.rental.dao.BankAccountRepository;
 import com.andrew.rental.model.BankAccount;
 import com.andrew.rental.model.User;
 import com.andrew.rental.service.BankAccountService;
 import com.andrew.rental.service.UserService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
