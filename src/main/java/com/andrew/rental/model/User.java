@@ -25,9 +25,11 @@ public class User {
     private String surname;
     private String email;
     private String login;
+    @Column(name = "password_hash")
     private String passwordHash;
 
-    @Transient
+    @Column(name = "created_at")
+    @GeneratedValue
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)

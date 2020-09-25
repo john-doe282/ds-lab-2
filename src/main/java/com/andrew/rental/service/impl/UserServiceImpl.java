@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(UUID id) throws NotFoundException {
-        if (userRepository.existsById(id)) {
+        if (!userRepository.existsById(id)) {
             throw new NotFoundException("User does not exist");
         }
 
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public BankAccount getUserBankAccountById(UUID id) throws NotFoundException, IllegalAccessException {
+    public BankAccount getUserBankAccountById(UUID id) throws NotFoundException {
         Optional<User> userOptional = userRepository.findById(id);
         if (!userOptional.isPresent()) {
             throw new NotFoundException("User does not exist");
