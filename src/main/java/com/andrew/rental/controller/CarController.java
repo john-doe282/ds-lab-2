@@ -24,10 +24,9 @@ public class CarController {
     }
 
     @GetMapping("{id}")
-    ResponseEntity<Car> getCarById(@PathVariable("id") UUID id) throws NotFoundException {
-        return ResponseEntity.ok(carService.getCarById(id));
+    Car getCarById(@PathVariable("id") UUID id) throws NotFoundException {
+        return carService.getCarById(id);
     }
-
 
     @PostMapping
     void addCar(@Validated @RequestBody Car car) {
