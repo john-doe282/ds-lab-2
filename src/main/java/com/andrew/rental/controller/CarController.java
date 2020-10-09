@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -27,7 +28,7 @@ public class CarController {
     }
 
     @PostMapping
-    void addCar(@Validated @RequestBody Car car) {
+    void addCar(@RequestBody Map<String, Object> car) {
         carService.addCar(car);
     }
 

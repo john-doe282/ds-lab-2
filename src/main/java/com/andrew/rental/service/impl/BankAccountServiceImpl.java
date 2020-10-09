@@ -1,55 +1,48 @@
 package com.andrew.rental.service.impl;
 
-import com.andrew.rental.dao.BankAccountRepository;
 import com.andrew.rental.model.BankAccount;
 import com.andrew.rental.service.BankAccountService;
 import javassist.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public final class BankAccountServiceImpl implements BankAccountService {
-    @Autowired
-    private BankAccountRepository bankAccountRepository;
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final String baseUrl = "http://localhost:8050/bank";
+
+    private void performPostRequest(String url, Map<String, Object> body) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        restTemplate.postForObject(url, entity, String.class);
+
+    }
 
     @Override
-    public void addBankAccount(BankAccount bankAccount) {
-        bankAccountRepository.save(bankAccount);
+    public void addBankAccount(Map<String, Object> bankAccount) {
+        performPostRequest(baseUrl, bankAccount);
     }
 
     @Override
     public BankAccount getBankAccountById(UUID id) throws NotFoundException {
-        Optional<BankAccount> bankAccountOptional = bankAccountRepository.findById(id);
-        if (bankAccountOptional.isPresent()) {
-            return bankAccountOptional.get();
-        }
+        String requestUrl = baseUrl + "/" + id.toString();
 
-        throw new NotFoundException("Bank account does not exist");
+        return restTemplate.getForObject(requestUrl, BankAccount.class);
     }
 
     @Override
     public void deleteBankAccountById(UUID id) throws NotFoundException {
-        if (bankAccountRepository.existsById(id)) {
-            throw new NotFoundException("Bank account does not exist");
-        }
+        String requestUrl = baseUrl + "/" + id.toString();
 
-        bankAccountRepository.deleteById(id);
-    }
-
-    @Override
-    public void increaseBalanceById(UUID id, int amount) throws NotFoundException {
-        Optional<BankAccount> bankAccountOptional = bankAccountRepository.findById(id);
-
-        if (!bankAccountOptional.isPresent()) {
-            throw new NotFoundException("Bank account does not exist");
-        }
-
-        BankAccount bankAccount = bankAccountOptional.get();
-        bankAccount.setBalance(bankAccount.getBalance() + amount);
-
-        bankAccountRepository.save(bankAccount);
+        restTemplate.delete(requestUrl);
     }
 }

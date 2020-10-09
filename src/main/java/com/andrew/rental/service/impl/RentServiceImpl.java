@@ -1,90 +1,53 @@
 package com.andrew.rental.service.impl;
 
-import com.andrew.rental.dao.ActiveRentRepository;
 import com.andrew.rental.model.*;
 import com.andrew.rental.service.*;
 import javassist.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class RentServiceImpl implements RentService {
-    @Autowired
-    private ActiveRentRepository activeRentRepository;
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final String baseUrl = "http://localhost:8040/rents";
 
-    @Autowired
-    private UserService userService;
+    private void performPostRequest(String url, Map<String, Object> body) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-    @Autowired
-    private CarService carService;
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
-    @Autowired
-    private PaymentService paymentService;
+        restTemplate.postForObject(url, entity, String.class);
 
-
-    private final double tax = 0.3;
+    }
 
     @Override
-    public void rent(ActiveRent rent) throws IllegalAccessException, NotFoundException {
-        UUID carId = rent.getCar().getId();
-        UUID clientId = rent.getClient().getId();
-
-        User client = userService.getUserById(clientId);
-        Car car = carService.getCarById(carId);
-
-        if (client.getRole() == Role.OWNER) {
-            throw new IllegalAccessException("This user is not a client");
-        }
-
-        if (car.getStatus() != Status.AVAILABLE) {
-            throw new IllegalAccessException("This car is not available");
-        }
-
-        UUID ownerId = car.getOwner().getId();
-        int duration = rent.getDuration();
-
-        int amount = (int) (car.getPricePerHour() * duration * (1 - tax));
-
-        BankAccount sender = userService.getUserBankAccountById(clientId);
-        BankAccount receiver = userService.getUserBankAccountById(ownerId);
-
-        paymentService.transaction(sender.getId(), receiver.getId(), amount);
-
-        carService.setStatusById(carId, Status.RENTED);
-        activeRentRepository.save(rent);
-
+    public void rent(Map<String, Object> rent) throws IllegalAccessException, NotFoundException {
+        performPostRequest(baseUrl, rent);
     }
 
     @Override
     public ActiveRent getActiveRentById(UUID id) throws NotFoundException {
-        Optional<ActiveRent> rentOptional = activeRentRepository.findById(id);
-        if (!rentOptional.isPresent()) {
-            throw new NotFoundException("Rent does not exist");
-        }
-
-        return rentOptional.get();
+        String requestUrl = baseUrl + "/" + id.toString();
+        return restTemplate.getForObject(requestUrl, ActiveRent.class);
     }
 
     @Override
     public void closeRentById(UUID id) throws NotFoundException {
-        Optional<ActiveRent> activeRentOptional = activeRentRepository.findById(id);
-        if (!activeRentOptional.isPresent()) {
-            throw new NotFoundException("Rent does not exist");
-        }
-
-        UUID carId = activeRentOptional.get().getCar().getId();
-        carService.setStatusById(carId, Status.AVAILABLE);
-
-        activeRentRepository.deleteById(id);
+        String requestUrl = baseUrl + "/" + id.toString();
+        restTemplate.delete(requestUrl);
     }
 
     @Override
     public List<ActiveRent> activeRentsForUserId(UUID id) throws NotFoundException {
-        User client = userService.getUserById(id);
-        return activeRentRepository.findActiveRentsByClient(client);
+        String requestUrl = baseUrl + "/user/" + id.toString();
+        return restTemplate.getForObject(requestUrl, List.class);
     }
 }

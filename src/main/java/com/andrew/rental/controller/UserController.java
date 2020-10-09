@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -37,12 +38,12 @@ public class UserController {
     };
 
     @PostMapping
-    public void createUser(@Validated @RequestBody User user) {
+    public void createUser(@RequestBody Map<String, Object> user) {
         userService.addUser(user);
     }
 
     @PostMapping("/bank")
-    public void addBankAccount(@Validated @RequestBody BankAccount bankAccount) {
+    public void addBankAccount(@RequestBody Map<String, Object> bankAccount) {
         bankAccountService.addBankAccount(bankAccount);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +24,7 @@ public class RentController {
     }
 
     @PostMapping
-    void rent(@Validated @RequestBody ActiveRent rent) throws IllegalAccessException, NotFoundException {
+    void rent(@RequestBody Map<String, Object> rent) throws IllegalAccessException, NotFoundException {
         rentService.rent(rent);
     }
 
