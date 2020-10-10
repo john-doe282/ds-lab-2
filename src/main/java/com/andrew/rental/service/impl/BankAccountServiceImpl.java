@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -44,5 +45,12 @@ public final class BankAccountServiceImpl implements BankAccountService {
         String requestUrl = baseUrl + "/" + id.toString();
 
         restTemplate.delete(requestUrl);
+    }
+
+    @Override
+    public List<BankAccount> getBankAccountsByUserId(UUID id) {
+        String requestUrl = baseUrl + "/user/" + id.toString();
+
+        return restTemplate.getForObject(requestUrl, List.class);
     }
 }

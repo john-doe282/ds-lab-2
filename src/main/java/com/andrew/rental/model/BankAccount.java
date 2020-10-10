@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Data
 @RequiredArgsConstructor
-public final class BankAccount {
+public class BankAccount {
     private UUID id;
 
     private String iban;

@@ -1,5 +1,6 @@
 package com.andrew.rental.controller;
 
+import com.andrew.rental.dto.UserDTO;
 import com.andrew.rental.model.BankAccount;
 import com.andrew.rental.model.User;
 import com.andrew.rental.service.BankAccountService;
@@ -28,7 +29,7 @@ public class UserController {
     };
 
     @GetMapping("{id}")
-    public User getUser(@PathVariable UUID id) throws NotFoundException {
+    public UserDTO getUser(@PathVariable UUID id) throws NotFoundException {
         return userService.getUserById(id);
     };
 

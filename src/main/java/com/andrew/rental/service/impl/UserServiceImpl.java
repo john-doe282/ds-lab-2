@@ -1,8 +1,14 @@
 package com.andrew.rental.service.impl;
 
+import com.andrew.rental.dto.UserDTO;
+import com.andrew.rental.model.BankAccount;
+import com.andrew.rental.model.Car;
 import com.andrew.rental.model.User;
+import com.andrew.rental.service.BankAccountService;
+import com.andrew.rental.service.CarService;
 import com.andrew.rental.service.UserService;
 import javassist.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,7 +22,13 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String baseUrl = "http://localhost:8070/";
+    private final String baseUrl = "http://localhost:8070/users";
+
+    @Autowired
+    private CarService carService;
+
+    @Autowired
+    private BankAccountService bankAccountService;
 
     private void performPostRequest(String url, Map<String, Object> body) {
         HttpHeaders headers = new HttpHeaders();
@@ -39,9 +51,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(UUID id) throws NotFoundException {
+    public UserDTO getUserById(UUID id) throws NotFoundException {
         String requestUrl = baseUrl + "/" + id.toString();
-        return restTemplate.getForObject(requestUrl, User.class);
+        User user = restTemplate.getForObject(requestUrl, User.class);
+        List<BankAccount> bankAccounts = bankAccountService.
+                getBankAccountsByUserId(id);
+        UserDTO userDTO = UserDTO.fromUser(user, bankAccounts);
+        return UserDTO.fromUser(user, bankAccounts);
     }
 
     @Override

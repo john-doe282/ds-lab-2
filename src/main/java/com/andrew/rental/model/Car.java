@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @RequiredArgsConstructor
-public final class Car {
+public class Car {
     private UUID id;
 
     private String model;
