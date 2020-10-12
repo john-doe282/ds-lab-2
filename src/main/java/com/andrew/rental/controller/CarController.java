@@ -2,7 +2,6 @@ package com.andrew.rental.controller;
 
 import com.andrew.rental.model.Car;
 import com.andrew.rental.service.CarService;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,7 @@ public class CarController {
     }
 
     @GetMapping("{id}")
-    Car getCarById(@PathVariable("id") UUID id) throws NotFoundException {
+    Car getCarById(@PathVariable("id") UUID id) {
         return carService.getCarById(id);
     }
 
@@ -33,7 +32,7 @@ public class CarController {
     }
 
     @DeleteMapping("{id}")
-    void deleteCar(@PathVariable("id") UUID id) throws NotFoundException {
+    void deleteCar(@PathVariable("id") UUID id) {
         carService.deleteCarById(id);
     }
 }

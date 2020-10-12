@@ -2,7 +2,6 @@ package com.andrew.rental.service.impl;
 
 import com.andrew.rental.model.*;
 import com.andrew.rental.service.*;
-import javassist.NotFoundException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,7 +15,7 @@ import java.util.UUID;
 @Service
 public class RentServiceImpl implements RentService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String baseUrl = "http://localhost:8040/rents";
+    private final String baseUrl = System.getenv("RENTS_URL") + ":8085/rents";
 
     private void performPostRequest(String url, Map<String, Object> body) {
         HttpHeaders headers = new HttpHeaders();
@@ -29,24 +28,24 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
-    public void rent(Map<String, Object> rent) throws IllegalAccessException, NotFoundException {
+    public void rent(Map<String, Object> rent) throws IllegalAccessException {
         performPostRequest(baseUrl, rent);
     }
 
     @Override
-    public ActiveRent getActiveRentById(UUID id) throws NotFoundException {
+    public ActiveRent getActiveRentById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
         return restTemplate.getForObject(requestUrl, ActiveRent.class);
     }
 
     @Override
-    public void closeRentById(UUID id) throws NotFoundException {
+    public void closeRentById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
         restTemplate.delete(requestUrl);
     }
 
     @Override
-    public List<ActiveRent> activeRentsForUserId(UUID id) throws NotFoundException {
+    public List<ActiveRent> activeRentsForUserId(UUID id) {
         String requestUrl = baseUrl + "/user/" + id.toString();
         return restTemplate.getForObject(requestUrl, List.class);
     }

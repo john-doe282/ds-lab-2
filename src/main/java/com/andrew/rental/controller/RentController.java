@@ -2,7 +2,6 @@ package com.andrew.rental.controller;
 
 import com.andrew.rental.model.ActiveRent;
 import com.andrew.rental.service.RentService;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,22 +18,22 @@ public class RentController {
     private RentService rentService;
 
     @GetMapping("/user/{id}")
-    List<ActiveRent> getActiveRentsForUser(@PathVariable(name = "id") UUID userId) throws NotFoundException {
+    List<ActiveRent> getActiveRentsForUser(@PathVariable(name = "id") UUID userId) {
         return rentService.activeRentsForUserId(userId);
     }
 
     @PostMapping
-    void rent(@RequestBody Map<String, Object> rent) throws IllegalAccessException, NotFoundException {
+    void rent(@RequestBody Map<String, Object> rent) throws IllegalAccessException {
         rentService.rent(rent);
     }
 
     @GetMapping("{id}")
-    ActiveRent getActiveRent(@PathVariable("id") UUID id) throws NotFoundException {
+    ActiveRent getActiveRent(@PathVariable("id") UUID id) {
         return rentService.getActiveRentById(id);
     }
 
     @DeleteMapping("{id}")
-    void closeRent(@PathVariable("id") UUID id) throws NotFoundException {
+    void closeRent(@PathVariable("id") UUID id) {
         rentService.closeRentById(id);
     }
 

@@ -2,7 +2,6 @@ package com.andrew.rental.service.impl;
 
 import com.andrew.rental.model.BankAccount;
 import com.andrew.rental.service.BankAccountService;
-import javassist.NotFoundException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,7 +15,7 @@ import java.util.UUID;
 @Service
 public final class BankAccountServiceImpl implements BankAccountService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String baseUrl = "http://localhost:8050/bank";
+    private final String baseUrl = System.getenv("BANK_URL") + ":8081/bank";
 
     private void performPostRequest(String url, Map<String, Object> body) {
         HttpHeaders headers = new HttpHeaders();
@@ -34,14 +33,14 @@ public final class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public BankAccount getBankAccountById(UUID id) throws NotFoundException {
+    public BankAccount getBankAccountById(UUID id)  {
         String requestUrl = baseUrl + "/" + id.toString();
 
         return restTemplate.getForObject(requestUrl, BankAccount.class);
     }
 
     @Override
-    public void deleteBankAccountById(UUID id) throws NotFoundException {
+    public void deleteBankAccountById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
 
         restTemplate.delete(requestUrl);

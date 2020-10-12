@@ -4,7 +4,6 @@ import com.andrew.rental.model.Car;
 import com.andrew.rental.model.Role;
 import com.andrew.rental.model.Status;
 import com.andrew.rental.service.CarService;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +19,7 @@ import java.util.UUID;
 @Service
 public class CarServiceImpl implements CarService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String baseUrl = "http://localhost:8060/cars";
+    private final String baseUrl = System.getenv("CARS_URL") + ":8084/cars";
 
     private void performPostRequest(String url, Map<String, Object> body) {
         HttpHeaders headers = new HttpHeaders();
@@ -38,7 +37,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car getCarById(UUID id) throws NotFoundException {
+    public Car getCarById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
         return restTemplate.getForObject(requestUrl, Car.class);
     }
@@ -49,7 +48,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void deleteCarById(UUID id) throws NotFoundException {
+    public void deleteCarById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
         restTemplate.delete(requestUrl);
     }

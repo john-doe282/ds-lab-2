@@ -7,7 +7,6 @@ import com.andrew.rental.model.User;
 import com.andrew.rental.service.BankAccountService;
 import com.andrew.rental.service.CarService;
 import com.andrew.rental.service.UserService;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +21,7 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String baseUrl = "http://localhost:8070/users";
+    private final String baseUrl = System.getenv("USERS_URL") + ":8082/users";
 
     @Autowired
     private CarService carService;
@@ -51,7 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserById(UUID id) throws NotFoundException {
+    public UserDTO getUserById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
         User user = restTemplate.getForObject(requestUrl, User.class);
         List<BankAccount> bankAccounts = bankAccountService.
@@ -61,7 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(UUID id) throws NotFoundException {
+    public void deleteUserById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
         restTemplate.delete(requestUrl);
     }
