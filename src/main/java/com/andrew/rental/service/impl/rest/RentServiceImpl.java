@@ -1,7 +1,7 @@
-package com.andrew.rental.service.impl;
+package com.andrew.rental.service.impl.rest;
 
-import com.andrew.rental.model.BankAccount;
-import com.andrew.rental.service.BankAccountService;
+import com.andrew.rental.model.*;
+import com.andrew.rental.service.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,9 +13,9 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public final class BankAccountServiceImpl implements BankAccountService {
+public class RentServiceImpl implements RentService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String baseUrl = System.getenv("BANK_URL") + ":8081/bank";
+    private final String baseUrl = System.getenv("RENTS_URL") + ":8085/rents";
 
     private void performPostRequest(String url, Map<String, Object> body) {
         HttpHeaders headers = new HttpHeaders();
@@ -28,28 +28,25 @@ public final class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public void addBankAccount(Map<String, Object> bankAccount) {
-        performPostRequest(baseUrl, bankAccount);
+    public void rent(Map<String, Object> rent) throws IllegalAccessException {
+        performPostRequest(baseUrl, rent);
     }
 
     @Override
-    public BankAccount getBankAccountById(UUID id)  {
+    public ActiveRent getActiveRentById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
-
-        return restTemplate.getForObject(requestUrl, BankAccount.class);
+        return restTemplate.getForObject(requestUrl, ActiveRent.class);
     }
 
     @Override
-    public void deleteBankAccountById(UUID id) {
+    public void closeRentById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
-
         restTemplate.delete(requestUrl);
     }
 
     @Override
-    public List<BankAccount> getBankAccountsByUserId(UUID id) {
+    public List<ActiveRent> activeRentsForUserId(UUID id) {
         String requestUrl = baseUrl + "/user/" + id.toString();
-
         return restTemplate.getForObject(requestUrl, List.class);
     }
 }

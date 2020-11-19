@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package com.andrew.rental;
+
+option java_multiple_files = true;
+
+import "google/protobuf/timestamp.proto";
+
+
+enum Role {
+  OWNER = 0;
+  CLIENT = 1;
+}
+
+message GetRequest {
+  string id = 1;
+}
+
+message DeleteRequest {
+  string id = 1;
+}
+
+message AllRequest {
+}
+
+message AddUserRequest {
+  string name = 1;
+  string surname = 2;
+  string email = 3;
+  string login = 4;
+  string password_hash = 5;
+  Role role = 6;
+}
+
+message UserResponse {
+  string name = 1;
+  string surname = 2;
+  string email = 3;
+  string login = 4;
+  string password_hash = 5;
+  google.protobuf.Timestamp created_at = 6;
+  Role role = 7;
+}
+
+message AllResponse {
+  repeated UserResponse users = 1;
+}
+message AddResponse {
+  string id = 1;
+}
+
+message DeleteResponse {
+}
+
+service UserService {
+  rpc all(AllRequest) returns (AllResponse);
+  rpc get(GetRequest) returns (UserResponse);
+  rpc add(AddUserRequest) returns (AddResponse);
+  rpc delete(DeleteRequest) returns (DeleteResponse);
+}

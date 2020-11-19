@@ -1,4 +1,4 @@
-package com.andrew.rental.service.impl;
+package com.andrew.rental.service.impl.rest;
 
 import com.andrew.rental.model.Car;
 import com.andrew.rental.model.Role;
