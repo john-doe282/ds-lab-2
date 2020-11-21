@@ -1,9 +1,8 @@
 package com.andrew.rental.controller.rest;
 
 import com.andrew.rental.model.Car;
-import com.andrew.rental.service.CarService;
+import com.andrew.rental.service.rest.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

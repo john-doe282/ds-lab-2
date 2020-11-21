@@ -1,12 +1,11 @@
-package com.andrew.rental.service.impl.rest;
+package com.andrew.rental.service.rest.impl;
 
 import com.andrew.rental.dto.UserDTO;
 import com.andrew.rental.model.BankAccount;
-import com.andrew.rental.model.Car;
 import com.andrew.rental.model.User;
-import com.andrew.rental.service.BankAccountService;
-import com.andrew.rental.service.CarService;
-import com.andrew.rental.service.UserService;
+import com.andrew.rental.service.rest.BankAccountService;
+import com.andrew.rental.service.rest.CarService;
+import com.andrew.rental.service.rest.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() {
-        return restTemplate.getForObject(baseUrl, List.class);
+        return Arrays.asList(restTemplate.getForObject(baseUrl, User[].class));
     }
 
     @Override

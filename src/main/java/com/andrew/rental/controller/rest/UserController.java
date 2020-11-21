@@ -1,12 +1,10 @@
 package com.andrew.rental.controller.rest;
 
 import com.andrew.rental.dto.UserDTO;
-import com.andrew.rental.model.BankAccount;
 import com.andrew.rental.model.User;
-import com.andrew.rental.service.BankAccountService;
-import com.andrew.rental.service.UserService;
+import com.andrew.rental.service.rest.BankAccountService;
+import com.andrew.rental.service.rest.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

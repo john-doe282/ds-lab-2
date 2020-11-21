@@ -1,10 +1,8 @@
 package com.andrew.rental.controller.rest;
 
 import com.andrew.rental.model.ActiveRent;
-import com.andrew.rental.service.RentService;
+import com.andrew.rental.service.rest.RentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

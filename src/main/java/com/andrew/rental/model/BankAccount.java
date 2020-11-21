@@ -1,5 +1,6 @@
 package com.andrew.rental.model;
 
+import com.andrew.rental.GetBankAccountRequest;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -14,4 +15,13 @@ public class BankAccount {
     private int balance;
 
     private UUID userId;
+
+    public GetBankAccountRequest toGetBankAccountRequest() {
+        return GetBankAccountRequest.newBuilder().
+                setIban(id.toString()).
+                setIban(iban).
+                setBalance(balance).
+                setUserId(userId.toString()).
+                build();
+    }
 }

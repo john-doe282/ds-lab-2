@@ -1,10 +1,7 @@
-package com.andrew.rental.service.impl.rest;
+package com.andrew.rental.service.rest.impl;
 
-import com.andrew.rental.model.Car;
-import com.andrew.rental.model.Role;
-import com.andrew.rental.model.Status;
-import com.andrew.rental.service.CarService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.andrew.rental.model.*;
+import com.andrew.rental.service.rest.RentService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,13 +10,12 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class CarServiceImpl implements CarService {
+public class RentServiceImpl implements RentService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String baseUrl = System.getenv("CARS_URL") + ":8084/cars";
+    private final String baseUrl = System.getenv("RENTS_URL") + ":8085/rents";
 
     private void performPostRequest(String url, Map<String, Object> body) {
         HttpHeaders headers = new HttpHeaders();
@@ -32,24 +28,25 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void addCar(Map<String, Object> car) {
-        performPostRequest(baseUrl, car);
+    public void rent(Map<String, Object> rent) throws IllegalAccessException {
+        performPostRequest(baseUrl, rent);
     }
 
     @Override
-    public Car getCarById(UUID id) {
+    public ActiveRent getActiveRentById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
-        return restTemplate.getForObject(requestUrl, Car.class);
+        return restTemplate.getForObject(requestUrl, ActiveRent.class);
     }
 
     @Override
-    public List<Car> findAll() {
-        return restTemplate.getForObject(baseUrl, List.class);
-    }
-
-    @Override
-    public void deleteCarById(UUID id) {
+    public void closeRentById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
         restTemplate.delete(requestUrl);
+    }
+
+    @Override
+    public List<ActiveRent> activeRentsForUserId(UUID id) {
+        String requestUrl = baseUrl + "/user/" + id.toString();
+        return restTemplate.getForObject(requestUrl, List.class);
     }
 }

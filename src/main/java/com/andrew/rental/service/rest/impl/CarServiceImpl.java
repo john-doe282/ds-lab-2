@@ -1,7 +1,7 @@
-package com.andrew.rental.service.impl.rest;
+package com.andrew.rental.service.rest.impl;
 
-import com.andrew.rental.model.*;
-import com.andrew.rental.service.*;
+import com.andrew.rental.model.Car;
+import com.andrew.rental.service.rest.CarService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -13,9 +13,9 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class RentServiceImpl implements RentService {
+public class CarServiceImpl implements CarService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String baseUrl = System.getenv("RENTS_URL") + ":8085/rents";
+    private final String baseUrl = System.getenv("CARS_URL") + ":8084/cars";
 
     private void performPostRequest(String url, Map<String, Object> body) {
         HttpHeaders headers = new HttpHeaders();
@@ -28,25 +28,24 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
-    public void rent(Map<String, Object> rent) throws IllegalAccessException {
-        performPostRequest(baseUrl, rent);
+    public void addCar(Map<String, Object> car) {
+        performPostRequest(baseUrl, car);
     }
 
     @Override
-    public ActiveRent getActiveRentById(UUID id) {
+    public Car getCarById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
-        return restTemplate.getForObject(requestUrl, ActiveRent.class);
+        return restTemplate.getForObject(requestUrl, Car.class);
     }
 
     @Override
-    public void closeRentById(UUID id) {
+    public List<Car> findAll() {
+        return restTemplate.getForObject(baseUrl, List.class);
+    }
+
+    @Override
+    public void deleteCarById(UUID id) {
         String requestUrl = baseUrl + "/" + id.toString();
         restTemplate.delete(requestUrl);
-    }
-
-    @Override
-    public List<ActiveRent> activeRentsForUserId(UUID id) {
-        String requestUrl = baseUrl + "/user/" + id.toString();
-        return restTemplate.getForObject(requestUrl, List.class);
     }
 }
