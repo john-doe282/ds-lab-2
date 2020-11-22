@@ -8,6 +8,7 @@ import io.grpc.ManagedChannelBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PreDestroy;
+import java.util.UUID;
 
 @Service("GrpcBankService")
 public class GrpcBankAccountServiceImpl implements GrpcBankAccountService {
@@ -17,6 +18,7 @@ public class GrpcBankAccountServiceImpl implements GrpcBankAccountService {
     public GrpcBankAccountServiceImpl() {
         channel = ManagedChannelBuilder.
                 forAddress(System.getenv("BANK_URL"), 6567).
+                usePlaintext().
                 build();
         stub = BankAccountServiceGrpc.newBlockingStub(channel);
     }
@@ -27,7 +29,15 @@ public class GrpcBankAccountServiceImpl implements GrpcBankAccountService {
     }
 
     @Override
-    public GetBankAccountResponse getBankAccountsByUserId(GetBankAccountRequest request) {
+    public GetBankAccountResponse getBankAccountsByUserIdRequest(GetBankAccountRequest request) {
+        return stub.getByUserId(request);
+    }
+
+    @Override
+    public GetBankAccountResponse getBankAccountsByUserId(UUID id) {
+        GetBankAccountRequest request = GetBankAccountRequest.newBuilder().
+                setUserId(id.toString()).
+                build();
         return stub.getByUserId(request);
     }
 

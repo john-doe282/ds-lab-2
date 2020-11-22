@@ -10,7 +10,7 @@ message AddBankAccountRequest {
   int64 balance = 3;
 }
 
-message BankAccount {
+message BankAccountResponse {
   string id = 1;
   string user_id = 2;
   string iban = 3;
@@ -18,7 +18,7 @@ message BankAccount {
 }
 
 message GetBankAccountResponse {
-  repeated BankAccount bank_accounts = 1;
+  repeated BankAccountResponse bank_accounts = 1;
 }
 
 message GetBankAccountRequest {

@@ -7,10 +7,10 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PreDestroy;
+import java.util.UUID;
 
 @Service("GrpcUserService")
 public class GrpcUserServiceImpl implements GrpcUserService {
@@ -40,7 +40,23 @@ public class GrpcUserServiceImpl implements GrpcUserService {
 
     @Override
     public UserResponse getUserById(GetRequest request) {
-        return stub.get(request);
+        UsersShort user = stub.shortGet(request);
+        GetBankAccountResponse bankAccount = bankAccountService.
+                getBankAccountsByUserId(UUID.fromString(user.getId()));
+
+//        Might be a problem
+        UserResponse response = UserResponse.newBuilder().
+                setName(user.getName()).
+                setSurname(user.getSurname()).
+                setId(user.getId()).
+                setRole(user.getRole()).
+                setLogin(user.getLogin()).
+                setPasswordHash(user.getPasswordHash()).
+                setEmail(user.getEmail()).
+                setCreatedAt(user.getCreatedAt()).
+                setBankAccounts(bankAccount).
+                build();
+        return response;
     }
 
     @Override
