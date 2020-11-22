@@ -58,12 +58,12 @@ public class UserDTO {
                 setNanos(createdAt.getNano()).
                 build();
 
-        BankAccount arr = bankAccounts.get(0);
-        GetBankAccountRequest test = bankAccounts.get(0).toGetBankAccountRequest();
-
-        List<GetBankAccountRequest> convertedBankAccounts = bankAccounts.stream().
-                map(BankAccount::toGetBankAccountRequest).
-                collect(Collectors.toList());
+//        BankAccount arr = bankAccounts.get(0);
+//        GetBankAccountRequest test = bankAccounts.get(0).toGetBankAccountRequest();
+//
+//        List<GetBankAccountRequest> convertedBankAccounts = bankAccounts.stream().
+//                map(BankAccount::toGetBankAccountRequest).
+//                collect(Collectors.toList());
 
         return UserResponse.newBuilder().
                 setId(id.toString()).
@@ -73,8 +73,8 @@ public class UserDTO {
                 .setEmail(email)
                 .setLogin(login)
                 .setPasswordHash(passwordHash)
-                .setRole(com.andrew.rental.Role.valueOf(role.toString())).
-                addAllBankAccounts(convertedBankAccounts)
+                .setRole(com.andrew.rental.Role.valueOf(role.toString()))//.
+//                addAllBankAccounts(convertedBankAccounts)
                 .build();
     }
 }

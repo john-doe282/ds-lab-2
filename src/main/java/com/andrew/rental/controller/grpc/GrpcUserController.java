@@ -12,10 +12,12 @@ import com.andrew.rental.UserResponse;
 import com.andrew.rental.UserServiceGrpc;
 import com.andrew.rental.dto.UserDTO;
 import com.andrew.rental.model.User;
+import com.andrew.rental.service.grpc.GrpcUserService;
 import com.andrew.rental.service.rest.UserService;
 import io.grpc.stub.StreamObserver;
 import org.lognet.springboot.grpc.GRpcService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,36 +27,30 @@ import java.util.stream.Collectors;
 @GRpcService
 public class GrpcUserController extends UserServiceGrpc.UserServiceImplBase {
     @Autowired
-    private UserService userService;
+    @Qualifier("GrpcUserService")
+    private GrpcUserService userService;
 
     @Override
     public void all(AllRequest request, StreamObserver<AllResponse> responseObserver) {
-        List<User> users = userService.findAll();
-        List<UsersShort> convertedUsers = users.stream().
-                map(User::toUsersShort).collect(Collectors.toList());
-        AllResponse response = AllResponse.newBuilder().addAllUsers(convertedUsers).
-                build();
-        responseObserver.onNext(response);
+        responseObserver.onNext(userService.findAll(request));
         responseObserver.onCompleted();
     }
 
     @Override
     public void get(GetRequest request, StreamObserver<com.andrew.rental.UserResponse> responseObserver) {
-        UUID id = UUID.fromString(request.getId());
-        UserDTO user = userService.getUserById(id);
-        UserResponse userResponse = user.toUserResponse();
-        responseObserver.onNext(userResponse);
+        responseObserver.onNext(userService.getUserById(request));
         responseObserver.onCompleted();
     }
 
     @Override
     public void add(AddUserRequest request, StreamObserver<AddResponse> responseObserver) {
-        super.add(request, responseObserver);
+        responseObserver.onNext(userService.addUser(request));
+        responseObserver.onCompleted();
     }
 
     @Override
     public void delete(DeleteRequest request, StreamObserver<DeleteResponse> responseObserver) {
-        userService.deleteUserById(UUID.fromString(request.getId()));
-        super.delete(request, responseObserver);
+        responseObserver.onNext(userService.deleteUserById(request));
+        responseObserver.onCompleted();
     }
 }

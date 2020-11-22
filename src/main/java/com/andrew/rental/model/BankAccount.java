@@ -16,12 +16,12 @@ public class BankAccount {
 
     private UUID userId;
 
-    public GetBankAccountRequest toGetBankAccountRequest() {
-        return GetBankAccountRequest.newBuilder().
-                setIban(id.toString()).
-                setIban(iban).
-                setBalance(balance).
-                setUserId(userId.toString()).
-                build();
-    }
+//    public GetBankAccountRequest toGetBankAccountRequest() {
+//        return GetBankAccountRequest.newBuilder().
+//                setIban(id.toString()).
+//                setIban(iban).
+//                setBalance(balance).
+//                setUserId(userId.toString()).
+//                build();
+//    }
 }
