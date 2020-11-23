@@ -80,4 +80,5 @@ service UserService {
   rpc shortGet(GetRequest) returns (UsersShort);
   rpc add(AddUserRequest) returns (AddResponse);
   rpc delete(DeleteRequest) returns (DeleteResponse);
+  rpc addBankAccount (AddBankAccountRequest) returns (BankResponse);
 }

@@ -12,6 +12,7 @@ import com.andrew.rental.UserResponse;
 import com.andrew.rental.UserServiceGrpc;
 import com.andrew.rental.dto.UserDTO;
 import com.andrew.rental.model.User;
+import com.andrew.rental.service.grpc.GrpcBankAccountService;
 import com.andrew.rental.service.grpc.GrpcUserService;
 import com.andrew.rental.service.rest.UserService;
 import io.grpc.stub.StreamObserver;
@@ -29,6 +30,9 @@ public class GrpcUserController extends UserServiceGrpc.UserServiceImplBase {
     @Autowired
     @Qualifier("GrpcUserService")
     private GrpcUserService userService;
+
+    @Autowired
+    private GrpcBankAccountService bankAccountService;
 
     @Override
     public void all(AllRequest request, StreamObserver<AllResponse> responseObserver) {
@@ -51,6 +55,12 @@ public class GrpcUserController extends UserServiceGrpc.UserServiceImplBase {
     @Override
     public void delete(DeleteRequest request, StreamObserver<DeleteResponse> responseObserver) {
         responseObserver.onNext(userService.deleteUserById(request));
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void addBankAccount(AddBankAccountRequest request, StreamObserver<BankResponse> responseObserver) {
+        responseObserver.onNext(bankAccountService.addBankAccount(request));
         responseObserver.onCompleted();
     }
 }
