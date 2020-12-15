@@ -16,7 +16,14 @@ import java.util.UUID;
 @Service
 public final class BankAccountServiceImpl implements BankAccountService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String baseUrl = System.getenv("BANK_URL") + ":8081/bank";
+    private String baseUrl = System.getenv("BANK_URL") + ":8081/bank";
+
+    public BankAccountServiceImpl() {
+        String host = System.getenv("BANK_URL");
+        if (!host.startsWith("http://")) {
+            baseUrl = "http://" + host + ":8081/bank";
+        }
+    }
 
     private void performPostRequest(String url, Map<String, Object> body) {
         HttpHeaders headers = new HttpHeaders();

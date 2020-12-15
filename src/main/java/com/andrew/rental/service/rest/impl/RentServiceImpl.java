@@ -15,8 +15,14 @@ import java.util.UUID;
 @Service
 public class RentServiceImpl implements RentService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String baseUrl = System.getenv("RENTS_URL") + ":8085/rents";
+    private String baseUrl = System.getenv("RENTS_URL") + ":8085/rents";
 
+    public RentServiceImpl() {
+        String host = System.getenv("RENTS_URL");
+        if (!host.startsWith("http://")) {
+            baseUrl = "http://" + host + ":8085/rents";
+        }
+    }
     private void performPostRequest(String url, Map<String, Object> body) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
